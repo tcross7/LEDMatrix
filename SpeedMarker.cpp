@@ -8,7 +8,20 @@ SpeedMarker::SpeedMarker(int side, int inputOffset)
 {
     randomSeed(analogRead(A0));
     offset = inputOffset;
-   
+
+    // create the structure that holds the color information
+    union COLOR
+    {
+        unsigned long RGB;
+        byte bytes[3];
+    };
+
+    union COLOR assembledColor;
+    
+
+    // randomize the markers to start, until reset
+    randomizeMarker();
+
     // refers to the base (lowest) position of the marker
     // markers are 1 pixel wide and 3 (for now) pixels tall
     // start location is dependent on which side of the straight they're on
@@ -34,7 +47,9 @@ SpeedMarker::SpeedMarker(int side, int inputOffset)
 void SpeedMarker::reset() 
 {
     x = start_pos;
-    y = 0-offset; 
+    y = 0-offset;
+
+    randomizeMarker();
 }
 
 
@@ -78,6 +93,13 @@ int SpeedMarker::getSide()
     }
 }
 
+
+
+int SpeedMarker::getColor(void)
+{
+    return assembledColor.RGB;
+}
+
 // get the x location of the current marker
 int SpeedMarker::getX(void)
 {
@@ -95,5 +117,7 @@ int SpeedMarker::getY(void)
 // NOTE: it might be easier to do this up a level (for drawing purposes - unless I can return arrays here)
 void SpeedMarker::randomizeMarker(void)
 {
-    // use random selection to set shape, size, color of object
+    assembledColor.bytes[2] = random(8); // R
+    assembledColor.bytes[1] = random(2); // G - keep this value low
+    assembledColor.bytes[0] = random(8); // B 
 }

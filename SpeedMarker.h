@@ -15,6 +15,14 @@ class SpeedMarker
         bool left;
         bool right;
 
+        union COLOR
+        {
+            unsigned long RGB;
+            byte bytes[3];
+        };
+
+        union COLOR assembledColor;
+
 
         void reset();
         void move();
@@ -22,5 +30,6 @@ class SpeedMarker
         int getX();
         int getY();
         void randomizeMarker();
+        int getColor();
 };
 #endif
