@@ -1,10 +1,7 @@
 // TO-DO:
-// flip left commands so they work for right hand turns as well
-// integrate corner sequence with straight sequence - needs some thinking
-// add red/green button to indicate acceleration/braking
-// have the driver's hands draw all of the pixels so no clear screen is needed
-// add more objects to be markers - maybe just randomize shapes and colors?
-// add brake markers close to corners?
+// randomize color shapes - needs some figuring out
+// Add start lights
+// maybe add a transition state out of the last stage of turning
 //
 // LONGER TERM: add lively 'performance' like lockups
 //              Randomize driver helmet color/pattern
@@ -26,11 +23,11 @@
 SpeedMarker markerL(-1,0);
 SpeedMarker markerR(1,0);
 
-SpeedMarker markerL1(-1,2);
-SpeedMarker markerR1(1,3);
+SpeedMarker markerL1(-1,4);
+SpeedMarker markerR1(1,4);
 
 SpeedMarker markerL2(-1,8);
-SpeedMarker markerR2(1,7);
+SpeedMarker markerR2(1,8);
 
 
 
@@ -38,17 +35,69 @@ RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);
 
 void setup() 
 {
-   Serial.begin(9600);
+   //Serial.begin(9600);
    matrixInit();
+   draw_logo();
 }
 
 void loop() 
 {
-   
-   drawStraight();
-   //delay(5000);
+   drawCircuit();
+}
 
-   //drawLeftTurnSequence();
+// draw a pre-determined pattern that represents a single circuit
+// Possibly randomize this in the future?
+void drawCircuit()
+{
+   int initial_time = millis();
+   int count = millis() - initial_time; // current_time - initial_time
+
+   while (count < 30000) // 30 second lap
+   {
+      count = millis() - initial_time;
+      
+      // 8 second straight
+      if (count < 8000)
+      {
+         drawStraight();
+      }
+      
+      // turn left
+      else if ((count >= 8000) && (count < 9750))
+      {
+         drawLeftTurnSequence();
+      }
+
+      // 12.25 second straight
+      else if ((count >= 9750) && (count < 22000))
+      {
+         drawStraight();
+      }
+
+      // turn right
+      else if ((count >= 22000) && (count < 23750))
+      {
+         drawRightTurnSequence();
+      }
+
+      // 2.25 second straight
+      else if ((count >= 23750) && (count < 26000))
+      {
+         drawStraight();
+      }
+      
+      // turn left
+      else if ((count >= 26000) && (count < 27750))
+      {
+         drawLeftTurnSequence();
+      }
+
+      // straight until the end of the timer
+      else if (count >= 27750)
+      {
+         drawStraight();
+      } 
+   }
 }
 
 /*
@@ -58,126 +107,317 @@ void loop()
 // draw the base image:
 void drawStraight(void)
 {
-   markerL.move();
-   markerR.move();
-   markerL1.move();
-   markerR1.move();
-   markerL2.move();
-   markerR2.move();
+   
+   moveLeftMarkers();
+   moveRightMarkers();   
 
    drawGrass(0);
 
-   drawMarker(markerL);
-   drawMarker(markerR);
-   drawMarker(markerL1);
-   drawMarker(markerR1);
-   drawMarker(markerL2);
-   drawMarker(markerR2);
+   drawLeftMarkers();
+   drawRightMarkers();   
 
    drawRoad(0);
-   drawTrackLimits(0);
+   drawTrackLimits(0,0);
    
    drawCar();
-   drawDriver(0);
+   drawDriver(0,1);
    drawTires(0);
 
    drawPoint(0,0,matrix.Color888(34,139,34));
 
 }
 
-// draw the car approaching a left turn:
+// draw the car approaching a left turn
+// currently 1750 milliseconds total
 void drawLeftTurnSequence(void)
 {
-   // stage 1:
+   drawLeftStage1(100);
+   drawLeftStage2(150);
+   drawLeftStage3(200);
+   drawLeftStage4(250);
+   drawLeftStage5(450);
+   drawLeftStage6(600);
+}
+
+// draw the car approaching a right turn
+// currently 1750 milliseconds total
+void drawRightTurnSequence(void)
+{
+
+   drawRightStage1(100);
+   drawRightStage2(150);
+   drawRightStage3(200);
+   drawRightStage4(250);
+   drawRightStage5(450);
+   drawRightStage6(600);
+
+}
+
+void moveRightMarkers()
+{
+   markerR.move();
+   markerR1.move();
+   markerR2.move();
+}
+
+void drawRightMarkers()
+{
+   drawMarker(markerR);
+   drawMarker(markerR1);
+   drawMarker(markerR2);
+}
+
+void moveLeftMarkers()
+{
+   markerL.move();
+   markerL1.move();
+   markerL2.move();
+}
+
+void drawLeftMarkers()
+{
+   drawMarker(markerL);
+   drawMarker(markerL1);
+   drawMarker(markerL2);
+}
+
+// Left stage 1
+void drawLeftStage1(int pause_length)
+{   
+   moveRightMarkers();
    drawGrass(0);
+
+   drawRightMarkers();
+   drawRoad(0);
+   drawTires(0);
+   drawTrackLimits(-1,1);
+   
+   drawCar();
+   drawDriver(0,0);
+
+   drawPoint(0,0,matrix.Color888(255,255,255));   
+   
+   delay(pause_length);
+}
+
+// Left stage 2
+void drawLeftStage2(int pause_length)
+{
+   moveRightMarkers();
+   drawGrass(0);
+
+   drawRightMarkers();
 
    drawRoad(0);
    drawTires(0);
-   drawTrackLimits(-1);
+   drawTrackLimits(-1,2);
    
    drawCar();
-   drawDriver(0);
+   drawDriver(0,0);
    
+   drawPoint(0,0,matrix.Color888(255,255,255));  
    //
-   delay(100);
+   delay(pause_length);
 
-   // stage 2:
+}
+// Left stage 3
+void drawLeftStage3(int pause_length)
+{
+   moveRightMarkers();
    drawGrass(0);
+
+   drawRightMarkers();
 
    drawRoad(0);
    drawTires(0);
-   drawTrackLimits(-2);
+   drawTrackLimits(-1,3);
    
    drawCar();
-   drawDriver(0);
+   drawDriver(0,0);
    
-   //
-   delay(150);
+   drawPoint(0,0,matrix.Color888(255,255,255));  
+   
+   delay(pause_length);
+}
 
-   // stage 3:
+// Left stage 4
+void drawLeftStage4(int pause_length)
+{
+   moveRightMarkers();
    drawGrass(0);
+
+   drawRightMarkers();
 
    drawRoad(0);
    drawTires(0);
-   drawTrackLimits(-3);
+   drawTrackLimits(-1,4);
    
    drawCar();
-   drawDriver(0);
+   drawDriver(0,0);
    
+   drawPoint(0,0,matrix.Color888(255,255,255));  
    //
-   delay(200);
+   delay(pause_length);
+}
 
-   // stage 4: 
+// Left stage 5
+void drawLeftStage5(int pause_length)
+{
+   // START CAR + DRIVER TURN: 
+
+   moveRightMarkers();
    drawGrass(0);
 
-   drawRoad(0);
-   drawTires(0);
-   drawTrackLimits(-4);
-   
-   drawCar();
-   drawDriver(0);
-   
-   //
-   delay(250);
-
-   // stage 5 START CAR + DRIVER TURN: 
-   drawGrass(0);
+   drawRightMarkers();
 
    drawRoad(-1);
    drawTires(-1);
-   drawTrackLimits(-5);
+   drawTrackLimits(-1,5);
    
    drawCar();
-   drawDriver(-1);
+   drawDriver(-1,0);
 
-   //
-   delay(450);
+   drawPoint(0,0,matrix.Color888(255,255,255));  
+   
+   delay(pause_length);
+}
 
-   // stage 6 (mid-corner/exit): 
+// Left stage 6
+void drawLeftStage6(int pause_length)
+{
+   // mid-corner/exit: 
    drawRoad(-1);
    drawTires(-1);
-   drawTrackLimits(-6);
+   drawTrackLimits(-1,6);
    drawGrass(-6);
    
    drawCar();
-   drawDriver(-1);
+   drawDriver(-1,0);
 
-   //
-   delay(600);
+   drawPoint(0,0,matrix.Color333(2,2,4));  
+   
+   delay(pause_length);
 }
 
-// draw the car turning left on the road:
-void drawCarAndRoadTurnLeft(void)
-{    
-      drawGrass(0);
+// Right stage 1
+void drawRightStage1(int pause_length)
+{
+   moveLeftMarkers();
+   drawGrass(0);
 
-      drawRoad(-1);
-      drawTrackLimits(-5);
+   drawLeftMarkers();
 
-      drawCar();
-      drawDriver(-1);
-      drawTires(-1);
+   drawRoad(0);
+   drawTires(0);
+   drawTrackLimits(1,1);
+   
+   drawCar();
+   drawDriver(0,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34)); // draw 0,0 pixel green
+   
+   delay(pause_length);
 }
+
+// Right stage 2
+void drawRightStage2(int pause_length)
+{
+   moveLeftMarkers();
+   drawGrass(0);
+
+   drawLeftMarkers();
+
+   drawRoad(0);
+   drawTires(0);
+   drawTrackLimits(1,2);
+   
+   drawCar();
+   drawDriver(0,0);
+   
+   drawPoint(0,0,matrix.Color888(34,139,34));   
+   
+   delay(pause_length);
+}
+
+// Right stage 3
+void drawRightStage3(int pause_length)
+{
+   moveLeftMarkers();
+   drawGrass(0);
+
+   drawLeftMarkers();
+
+   drawRoad(0);
+   drawTires(0);
+   drawTrackLimits(1,3);
+   
+   drawCar();
+   drawDriver(0,0);
+   
+   drawPoint(0,0,matrix.Color888(34,139,34));   
+   
+   delay(pause_length);
+}
+
+// Right stage 4
+void drawRightStage4(int pause_length)
+{
+   moveLeftMarkers();
+   drawGrass(0);
+
+   drawLeftMarkers();
+
+   drawRoad(0);
+   drawTires(0);
+   drawTrackLimits(1,4);
+   
+   drawCar();
+   drawDriver(0,0);
+   
+   drawPoint(0,0,matrix.Color888(34,139,34));    
+   
+   delay(pause_length);
+}
+
+// Right stage 5
+void drawRightStage5(int pause_length)
+{
+   // START CAR + DRIVER TURN: 
+   moveLeftMarkers();
+   drawGrass(0);
+
+   drawLeftMarkers();
+
+   drawRoad(1);
+   drawTires(1);
+   drawTrackLimits(1,5);
+   
+   drawCar();
+   drawDriver(1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  
+   
+   delay(pause_length);
+}
+
+// Right stage 6
+void drawRightStage6(int pause_length)
+{
+   // mid-corner/exit: 
+   drawRoad(1);
+   drawTires(1);
+   drawTrackLimits(1,6);
+   drawGrass(6);
+   
+   drawCar();
+   drawDriver(1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  
+   
+   delay(pause_length);
+}
+
+////
 
 // draw the moving speed markers on the side of the road
 void drawMarker(SpeedMarker inputMarker)
@@ -190,7 +430,7 @@ void drawMarker(SpeedMarker inputMarker)
    int x_array[8] = {x, x,   x,   x,   x+shifter, x+shifter, x+shifter, x+shifter};
    int y_array[8] = {y, y-1, y-2, y-3, y,         y-1,       y-2,       y-3,};
 
-   int markerColor = matrix.Color333(2,1,0); // brown
+   int markerColor = inputMarker.getColor();
 
    drawArray(x_array, sizeof(x_array), y_array, sizeof(y_array), markerColor, 0);
 }
@@ -208,10 +448,10 @@ void drawRoad(int dir)
 {
    int color_gray = matrix.Color333(2,2,4);
 
-   // part of the left turn, negative space will come in later to draw the wheels:
-   if (dir == -1)
+   // part of the left/right turn, negative space will come in later to draw the wheels:
+   if (dir == -1 || dir == 1)
    {
-      int x_gray[280] =                     {   12,13,14,15,16,17,18,19,
+      int x_gray[280] =                     {12,13,14,15,16,17,18,19,
                                           11,12,13,14,15,16,17,18,19,20,
                                        10,11,12,13,14,15,16,17,18,19,20,21,
                                        9,10,11,12,13,14,15,16,17,18,19,20,21,22,
@@ -252,7 +492,7 @@ void drawRoad(int dir)
    // fully straight, draw the wheels in to avoid flashing:
    if (dir == 0)
    {
-      int x_gray[248] =                     {   12,13,14,15,16,17,18,19,
+      int x_gray[248] =                     {12,13,14,15,16,17,18,19,
                                           11,12,13,14,15,16,17,18,19,20,
                                        10,11,12,13,14,15,16,17,18,19,20,21,
                                        9,10,11,12,13,14,15,16,17,18,19,20,21,22,
@@ -288,14 +528,7 @@ void drawRoad(int dir)
          15,15,15,15,15,15,15,15,15,15,15,                            15,15,15,15,15,15,15,15,15,15,15};
 
       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
-   }
-   // second left turn
-   else if (dir == -2)
-   {
-
-   }
-
-   
+   }   
 }
 
 // draw the blank tires and axle based on which direction we're going. Note tires are drawn in negative space
@@ -325,33 +558,32 @@ void drawTires(int dir)
       // right:
       else if (dir == 1)
       {
-            /*int x_gray[] = {
-
-            };
-
-            int y_gray[] = {
-
-            };*/
+         int x_blank[29] = {8, 8, 9, 9, 9, 9,10,10,10,10,11,11,12,13,23,23,22,22,22,22,21,21,21,21,20,20,18,19};
+         int y_blank[29] = {7, 8, 6, 7, 8, 9, 7, 8, 9,10, 8, 9, 8, 8, 8, 9, 7, 8, 9,10, 6, 7, 8, 9, 7, 8, 8, 8};
+         drawArrayHFlip(x_blank, sizeof(x_blank), y_blank, sizeof(y_blank), 0 ,0);
       }
 }
 
 // draw the white track limits
+// dir = -1: left
 // dir = 0: straight
+// dir = 1: right
 
-// dir = -11: left curve
-// dir = -1: first left
-// dir = -2: second left
-// dir = -3: third left
-// dir = -4: fourth left
-// dir = -5: fifth left
-// dir = -6: mid-corner/exit (experimental)
-void drawTrackLimits(int dir)
+// stage = 0: straight
+// stage = -11: left curve
+// stage = 1: first
+// stage = 2: second
+// stage = 3: third
+// stage = 4: fourth
+// stage = 5: fifth
+// stage = 6: mid-corner/exit
+void drawTrackLimits(int dir, int stage)
 {
   int color_white = matrix.Color888(255,255,255);
   int color_gray = matrix.Color333(2,2,4);
   
   // left curve
-  if (dir == -11) 
+  if (stage == -11) 
   {
       int x_white[65] = { 1,2,16,
                           2,3,17,18,19,
@@ -389,8 +621,8 @@ void drawTrackLimits(int dir)
        drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
   }
 
-  // left 1
-  else if (dir == -1)
+  // 1
+  else if (stage == 1)
   {
       int x_white[75] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           0,1,2,3,4,5,6,7,8,9,21,22,
@@ -418,14 +650,28 @@ void drawTrackLimits(int dir)
                          10,10,10,10,
                          11,11,11,11,
                          12};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
-       
-       // account for the extra spot of road that we've uncovered:
-       drawPoint(10,1,color_gray);
+
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // account for the extra spot of road that we've uncovered:
+         drawPoint(10,1,color_gray);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // account for the extra spot of road that we've uncovered:
+         drawPoint(21,1,color_gray);
+      }
   }
 
-  // left 2
-  else if (dir == -2)
+  // 2
+  else if (stage == 2)
   {
       int x_white[71] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           21,22,
@@ -453,16 +699,33 @@ void drawTrackLimits(int dir)
                          10,10,10,10,
                          11,11,11,11,
                          12};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
-       // adding the new space to the road:
-       int x_gray[13] = {0,1,2,3,4,5,6,7,8,9,10,8,9};
-       int y_gray[13] = {1,1,1,1,1,1,1,1,1,1,1, 2,2};
-       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[13] = {0,1,2,3,4,5,6,7,8,9,10,8,9};
+         int y_gray[13] = {1,1,1,1,1,1,1,1,1,1,1, 2,2};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[13] = {0,1,2,3,4,5,6,7,8,9,10,8,9};
+         int y_gray[13] = {1,1,1,1,1,1,1,1,1,1,1, 2,2};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
   }
 
-   // left 3
-  else if (dir == -3)
+   // 3
+  else if (stage == 3)
   {
       int x_white[70] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           21,22,
@@ -490,16 +753,33 @@ void drawTrackLimits(int dir)
                          10,10,10,10,
                          11,11,11,11,
                          12};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
-       // adding the new space to the road:
-       int x_gray[22] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 8};
-       int y_gray[22] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3};
-       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[22] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 8};
+         int y_gray[22] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[22] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 8};
+         int y_gray[22] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
   }
 
-  // left 4
-  else if (dir == -4)
+  // 4
+  else if (stage == 4)
   {
       int x_white[68] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           21,22,
@@ -527,16 +807,33 @@ void drawTrackLimits(int dir)
                          10,10,10,10,
                          11,11,11,11,
                          12};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
-       // adding the new space to the road:
-       int x_gray[31] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 7};
-       int y_gray[31] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4};
-       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[31] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 7};
+         int y_gray[31] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[31] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 7};
+         int y_gray[31] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
   }
 
-  // left 5
-  else if (dir == -5)
+  // 5
+  else if (stage == 5)
   {
       int x_white[63] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           21,22,
@@ -564,16 +861,32 @@ void drawTrackLimits(int dir)
                          10,10,10,10,
                          11,11,11,11,
                          12};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
-       // adding the new space to the road:
-       int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 5};
-       int y_gray[48] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6};
-       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 5};
+         int y_gray[48] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 5};
+         int y_gray[48] = {1,1,1,1,1,1,1,1,1,1,1,  2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
   }
 
   // mid-corner/exit
-  else if (dir == -6) 
+  else if (stage == 6) 
   {
       int x_white[59] = { 20,21,
                           21,22,
@@ -608,13 +921,27 @@ void drawTrackLimits(int dir)
                          13,13,13,13,
                          14,14,14,14,
                          15,15,15,15};
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10,  1,2,3,4,5,6,7,8,9, 2,3,4,5,6,7,8, 3,4,5,6,7, 4,5,6, 5};
+         int y_gray[48] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1,  2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,4,4,4,4, 5,5,5, 6};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
 
-      drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
-      // adding the new space to the road:
-      int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10,  1,2,3,4,5,6,7,8,9, 2,3,4,5,6,7,8, 3,4,5,6,7, 4,5,6, 5};
-      int y_gray[48] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1,  2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,4,4,4,4, 5,5,5, 6};
-      drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+         // adding the new space to the road:
+         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10,  1,2,3,4,5,6,7,8,9, 2,3,4,5,6,7,8, 3,4,5,6,7, 4,5,6, 5};
+         int y_gray[48] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1,  2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,4,4,4,4, 5,5,5, 6};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
   }
   
   // straight
@@ -647,11 +974,7 @@ void drawTrackLimits(int dir)
                          11,11,11,11,
                          12};
       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
-  }
-  else if (dir == 1) // right
-  {
-      // tbd
-  }        
+  }      
 }
 
 // draw the green grass
@@ -728,8 +1051,8 @@ void drawGrass(int dir)
         drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
     }
     
-    // left (mid-corner/exit)
-    else if(dir == -6) 
+    // left or right (mid-corner/exit)
+    else if(dir == -6 || dir == 6) 
     {
         int x_green[119] = {                     22,23,24,25,26,27,28,29,30,31,
                                                     23,24,25,26,27,28,29,30,31,
@@ -764,7 +1087,15 @@ void drawGrass(int dir)
                            13,13,13,13,13,13,13,
                            14,14,14,14,14,14,14,
                            15,15,15,15,15,15,15};
-        drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
+         if (dir == -6)
+         {
+            drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
+         }
+         else if (dir == 6)
+         {
+            drawArrayHFlip(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
+         }
+        
     }
 }
 
@@ -807,8 +1138,10 @@ void drawCar(void)
 }
 
 // draw the driver's helmet and hands, white
-
-void drawDriver(int turn)
+// turn = -1: left
+// turn = 0: straight | accel = 1: green light, accel = 0: red light
+// turn = 1: right
+void drawDriver(int turn, int accel)
 {
   int color_white = matrix.Color888(255,255,255);
   
@@ -823,6 +1156,16 @@ void drawDriver(int turn)
 
       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white, 0);
       drawArray(x_black, sizeof(x_black), y_black, sizeof(y_black), 0, 0);
+      if (accel == 1)
+      {
+         drawPoint(15,12, matrix.Color888(0,255,0));
+         drawPoint(16,12, matrix.Color888(0,255,0));
+      }
+      else if (accel == 0)
+      {
+         drawPoint(15,12, matrix.Color888(255,0,0));
+         drawPoint(16,12, matrix.Color888(255,0,0));
+      }
   }
 
   // turning left
@@ -989,6 +1332,30 @@ void matrixUpdate(void)
     matrix.swapBuffers(false);
 }
 
+void draw_logo(void)
+{
+   int x_dig[18] = {0,1,2,2,2,2,3,4,5,5,5,5,6,7,8,8,8,8};
+   int y_dig[18] = {8,8,8,7,6,5,5,5,5,6,7,8,8,8,8,7,6,5};
+
+   int x_t[9] = {9,10,11,12,13,11,11,11,11};
+   int y_t[9] = {5,5,5,5,5,4,6,7,8};
+
+   int x_x[8] = {14,15,16,17,17,16,15,14};
+   int y_x[8] = {5,6,7,8,5,6,7,8};
+
+   int x_ana[14] = {18,19,20,21,22,23,24,25,26,27,28,29,30,31};
+   int y_ana[14] = {4,4,5,7,8,8,7,5,4,5,7,8,8,7};
+
+
+   drawArray(x_dig, sizeof(x_dig), y_dig, sizeof(y_dig), matrix.Color888(255,255,255), 100);
+   drawArray(x_t, sizeof(x_t), y_t, sizeof(y_t), matrix.Color888(33,150,243), 100);
+   drawArray(x_x, sizeof(x_x), y_x, sizeof(y_x), matrix.Color888(255,255,0), 100);
+   drawArray(x_ana, sizeof(x_ana), y_ana, sizeof(y_ana), matrix.Color888(255,255,255), 100); 
+   
+   delay(3000);
+   matrixClearScreen();
+}
+
 // draw a series of points with a given color
 int drawArray(int xarray[], int size_x, int yarray[], int size_y, int color, int pause)
 {
@@ -1004,6 +1371,26 @@ int drawArray(int xarray[], int size_x, int yarray[], int size_y, int color, int
     {
         matrix.drawPixel(xarray[i], yarray[i], color);
         delay(pause);
+    }
+    return 1;
+}
+
+// draw a series of points with a given color, flipped across the y axis (horizontally)
+int drawArrayHFlip(int xarray[], int size_x, int yarray[], int size_y, int color, int pause)
+{
+    int x_length = size_x/sizeof(xarray[0]);
+    int y_length = size_y/sizeof(yarray[0]);
+    
+    if (x_length != y_length)
+    {
+        return 0;
+    }
+
+    for (int i = 0 ; i < x_length ; i++)
+    {
+      int drawX = (-1*xarray[i]) + 31;
+      matrix.drawPixel(drawX, yarray[i], color);
+      delay(pause);
     }
     return 1;
 }
