@@ -117,7 +117,7 @@ int SpeedMarker::getY(void)
 // NOTE: it might be easier to do this up a level (for drawing purposes - unless I can return arrays here)
 void SpeedMarker::randomizeMarker(void)
 {
-    assembledColor.bytes[2] = random(8); // R
-    assembledColor.bytes[1] = random(2); // G - keep this value low
-    assembledColor.bytes[0] = random(8); // B 
+    assembledColor.bytes[2] = random(255); // R
+    assembledColor.bytes[1] = random(100); // G - keep this value lower so the objects show up on the green grass background
+    assembledColor.bytes[0] = random(255); // B 
 }
