@@ -1,7 +1,6 @@
 // TO-DO:
 // randomize color shapes - needs some figuring out
 // Add start lights
-// maybe add a transition state out of the last stage of turning
 //
 // LONGER TERM: add lively 'performance' like lockups
 //              Randomize driver helmet color/pattern
@@ -18,16 +17,92 @@
 #define B   A1
 #define C   A2
 
+// VARIABLES
+int x_green_mc3[115] = {0,1,2,3,4,5,6,7,8,9, 20,21,22,23,24,25,26,27,28,29,30,31,
+                     0,1,2,3,4,5,6,7,8,      21,22,23,24,25,26,27,28,29,30,31,
+                     0,1,2,3,4,5,6,7,              23,24,25,26,27,28,29,30,31,
+                     0,1,2,3,4,5,6,                      25,26,27,28,29,30,31,
+                     0,1,2,3,4,5,                           26,27,28,29,30,31,
+                     0,1,2,3,4,                                27,28,29,30,31,
+                     0,1,2,3,                                     28,29,30,31,
+                     0,1,2,                                          29,30,31,
+                     0,1,                                               30,31,
+                     0,                                                    31};
+int y_green_mc3[115] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                     1,1,1,1,1,1,1,1,1,    1,1,1,1,1,1,1,1,1,1,1,
+                     2,2,2,2,2,2,2,2,          2,2,2,2,2,2,2,2,2,
+                     3,3,3,3,3,3,3,                3,3,3,3,3,3,3,
+                     4,4,4,4,4,4,                    4,4,4,4,4,4,
+                     5,5,5,5,5,                        5,5,5,5,5,
+                     6,6,6,6,                            6,6,6,6,
+                     7,7,7,                                7,7,7,
+                     8,8,                                    8,8,
+                     9,                                        9};
+
+int x_green_mc2[66] ={0,1,               21,22,23,24,25,26,27,28,29,30,31,
+                  0,1,                     23,24,25,26,27,28,29,30,31,
+                  0,1,2,                         25,26,27,28,29,30,31,
+                  0,1,2,                               27,28,29,30,31,
+                  0,1,2,                               27,28,29,30,31,
+                  0,1,2,                                     29,30,31,
+                  0,1,                                             31,
+                  0,1,                                             31,
+                  0,1,
+                  0,
+                  0};
+
+int y_green_mc2[66] = {0,0,0,0,0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,1,1,1,1,
+               2,2,2,2,2,2,2,2,2,2,
+               3,3,3,3,3,3,3,3,
+               4,4,4,4,4,4,4,4,
+               5,5,5,5,5,5,
+               6,6,6,
+               7,7,7,
+               8,8,
+               9};
+
+int x_green_mc1[54] = {            19,20,21,22,23,24,25,26,27,28,29,30,31,
+                                          23,24,25,26,27,28,29,30,31,
+                                                25,26,27,28,29,30,31,
+                                                      27,28,29,30,31,
+                                                               30,31,
+                     0,
+                     0,1,
+                     0,1,2,
+                     0,1,2,
+                     0,1,2,
+                     0,1,
+                     0,1,
+                     0,
+                     0};
+
+int y_green_mc1[54] = {0,0,0,0,0,0,0,0,0,0,0,0,0,
+                  1,1,1,1,1,1,1,1,1,
+                  2,2,2,2,2,2,2,
+                  3,3,3,3,3,
+                  4,4,
+                  5,
+                  6,6,
+                  7,7,7,
+                  8,8,8,
+                  9,9,9,
+                  10,10,
+                  11,11,
+                  12,
+                  13};
+
+
+
 
 // randomize the offset?
 SpeedMarker markerL(-1,0);
-SpeedMarker markerR(1,0);
-
 SpeedMarker markerL1(-1,4);
-SpeedMarker markerR1(1,4);
+//SpeedMarker markerL2(-1,8);
 
-SpeedMarker markerL2(-1,8);
-SpeedMarker markerR2(1,8);
+SpeedMarker markerR(1,2);
+SpeedMarker markerR1(1,6);
+//SpeedMarker markerR2(1,8);
 
 
 
@@ -35,9 +110,7 @@ RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);
 
 void setup() 
 {
-   //Serial.begin(9600);
    matrixInit();
-   draw_logo();
 }
 
 void loop() 
@@ -63,37 +136,37 @@ void drawCircuit()
       }
       
       // turn left
-      else if ((count >= 8000) && (count < 9750))
+      else if ((count >= 8000) && (count < 10100))
       {
          drawLeftTurnSequence();
       }
 
-      // 12.25 second straight
-      else if ((count >= 9750) && (count < 22000))
+      // ~12 second straight
+      else if ((count >= 10100) && (count < 22000))
       {
          drawStraight();
       }
 
       // turn right
-      else if ((count >= 22000) && (count < 23750))
+      else if ((count >= 22000) && (count < 24100))
       {
          drawRightTurnSequence();
       }
 
-      // 2.25 second straight
-      else if ((count >= 23750) && (count < 26000))
+      // ~2 second straight
+      else if ((count >= 24100) && (count < 26000))
       {
          drawStraight();
       }
       
       // turn left
-      else if ((count >= 26000) && (count < 27750))
+      else if ((count >= 26000) && (count < 28100))
       {
          drawLeftTurnSequence();
       }
 
       // straight until the end of the timer
-      else if (count >= 27750)
+      else if (count >= 28100)
       {
          drawStraight();
       } 
@@ -111,7 +184,7 @@ void drawStraight(void)
    moveLeftMarkers();
    moveRightMarkers();   
 
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
    drawRightMarkers();   
@@ -128,19 +201,22 @@ void drawStraight(void)
 }
 
 // draw the car approaching a left turn
-// currently 1750 milliseconds total
+// currently 2100 milliseconds total
 void drawLeftTurnSequence(void)
 {
-   drawLeftStage1(100);
+  drawLeftStage1(100);
    drawLeftStage2(150);
    drawLeftStage3(200);
    drawLeftStage4(250);
-   drawLeftStage5(450);
-   drawLeftStage6(600);
+   drawLeftStage5(400);
+
+   drawLeftStage6(400);
+   drawLeftStage7(350);
+   drawLeftStage8(250);
 }
 
 // draw the car approaching a right turn
-// currently 1750 milliseconds total
+// currently 2100 milliseconds total
 void drawRightTurnSequence(void)
 {
 
@@ -148,44 +224,46 @@ void drawRightTurnSequence(void)
    drawRightStage2(150);
    drawRightStage3(200);
    drawRightStage4(250);
-   drawRightStage5(450);
-   drawRightStage6(600);
+   drawRightStage5(400);
 
+   drawRightStage6(400);
+   drawRightStage7(350);
+   drawRightStage8(250);
 }
 
 void moveRightMarkers()
 {
    markerR.move();
    markerR1.move();
-   markerR2.move();
+   //markerR2.move();
 }
 
 void drawRightMarkers()
 {
    drawMarker(markerR);
    drawMarker(markerR1);
-   drawMarker(markerR2);
+   //drawMarker(markerR2);
 }
 
 void moveLeftMarkers()
 {
    markerL.move();
    markerL1.move();
-   markerL2.move();
+   //markerL2.move();
 }
 
 void drawLeftMarkers()
 {
    drawMarker(markerL);
    drawMarker(markerL1);
-   drawMarker(markerL2);
+   //drawMarker(markerL2);
 }
 
-// Left stage 1
+// Left stage 1 - approach
 void drawLeftStage1(int pause_length)
 {   
    moveRightMarkers();
-   drawGrass(0);
+   drawGrass(-1, 0);
 
    drawRightMarkers();
    drawRoad(0);
@@ -200,11 +278,11 @@ void drawLeftStage1(int pause_length)
    delay(pause_length);
 }
 
-// Left stage 2
+// Left stage 2 - approach
 void drawLeftStage2(int pause_length)
 {
    moveRightMarkers();
-   drawGrass(0);
+   drawGrass(-1, 0);
 
    drawRightMarkers();
 
@@ -220,11 +298,11 @@ void drawLeftStage2(int pause_length)
    delay(pause_length);
 
 }
-// Left stage 3
+// Left stage 3 - approach
 void drawLeftStage3(int pause_length)
 {
    moveRightMarkers();
-   drawGrass(0);
+   drawGrass(-1, 0);
 
    drawRightMarkers();
 
@@ -240,11 +318,11 @@ void drawLeftStage3(int pause_length)
    delay(pause_length);
 }
 
-// Left stage 4
+// Left stage 4 - approach
 void drawLeftStage4(int pause_length)
 {
    moveRightMarkers();
-   drawGrass(0);
+   drawGrass(-1, 0);
 
    drawRightMarkers();
 
@@ -260,13 +338,13 @@ void drawLeftStage4(int pause_length)
    delay(pause_length);
 }
 
-// Left stage 5
+// Left stage 5 - approach
 void drawLeftStage5(int pause_length)
 {
    // START CAR + DRIVER TURN: 
 
    moveRightMarkers();
-   drawGrass(0);
+   drawGrass(-1, 0);
 
    drawRightMarkers();
 
@@ -282,28 +360,62 @@ void drawLeftStage5(int pause_length)
    delay(pause_length);
 }
 
-// Left stage 6
+// Left stage 6 - mid-corner 1
 void drawLeftStage6(int pause_length)
 {
    // mid-corner/exit: 
    drawRoad(-1);
    drawTires(-1);
-   drawTrackLimits(-1,6);
-   drawGrass(-6);
+   drawTrackLimits(-1, 6);
+   drawGrass(-1, 6);
    
    drawCar();
    drawDriver(-1,0);
 
-   drawPoint(0,0,matrix.Color333(2,2,4));  
+   drawPoint(0,0,matrix.Color333(2,2,4));
    
    delay(pause_length);
 }
 
-// Right stage 1
+// Left stage 7 - mid-corner 2
+void drawLeftStage7(int pause_length)
+{
+   // mid-corner
+   drawRoad(-1);
+   drawTires(-1);
+   drawTrackLimits(-1, 7);
+   drawGrass(-1, 7);
+   
+   drawCar();
+   drawDriver(-1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  //top left and top right pixels neec to be green here
+   drawPoint(31,0,matrix.Color888(34,139,34));
+   
+   delay(pause_length);
+}
+
+// Left stage 8 - mid-corner 3 / exit
+void drawLeftStage8(int pause_length)
+{
+   drawRoad(-1);
+   drawTires(-1);
+   drawGrass(-1, 8);
+   drawTrackLimits(-1, 8);
+   
+   drawCar();
+   drawDriver(-1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  
+   
+   delay(pause_length);
+}
+
+// Right stage 1 - approach
 void drawRightStage1(int pause_length)
 {
    moveLeftMarkers();
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
 
@@ -319,11 +431,11 @@ void drawRightStage1(int pause_length)
    delay(pause_length);
 }
 
-// Right stage 2
+// Right stage 2 - approach
 void drawRightStage2(int pause_length)
 {
    moveLeftMarkers();
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
 
@@ -339,11 +451,11 @@ void drawRightStage2(int pause_length)
    delay(pause_length);
 }
 
-// Right stage 3
+// Right stage 3 - approach
 void drawRightStage3(int pause_length)
 {
    moveLeftMarkers();
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
 
@@ -359,11 +471,11 @@ void drawRightStage3(int pause_length)
    delay(pause_length);
 }
 
-// Right stage 4
+// Right stage 4 - approach
 void drawRightStage4(int pause_length)
 {
    moveLeftMarkers();
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
 
@@ -379,12 +491,12 @@ void drawRightStage4(int pause_length)
    delay(pause_length);
 }
 
-// Right stage 5
+// Right stage 5 - approach
 void drawRightStage5(int pause_length)
 {
    // START CAR + DRIVER TURN: 
    moveLeftMarkers();
-   drawGrass(0);
+   drawGrass(1, 0);
 
    drawLeftMarkers();
 
@@ -400,14 +512,48 @@ void drawRightStage5(int pause_length)
    delay(pause_length);
 }
 
-// Right stage 6
+// Right stage 6 - mid-corner 1
 void drawRightStage6(int pause_length)
 {
    // mid-corner/exit: 
    drawRoad(1);
    drawTires(1);
    drawTrackLimits(1,6);
-   drawGrass(6);
+   drawGrass(1, 6);
+   
+   drawCar();
+   drawDriver(1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  
+   
+   delay(pause_length);
+}
+
+// Right stage 7 - mid-corner 2
+void drawRightStage7(int pause_length)
+{
+   // mid-corner/exit: 
+   drawRoad(1);
+   drawTires(1);
+   drawTrackLimits(1,7);
+   drawGrass(1, 7);
+   
+   drawCar();
+   drawDriver(1,0);
+
+   drawPoint(0,0,matrix.Color888(34,139,34));  
+   
+   delay(pause_length);
+}
+
+// Right stage 8 - mid-corner 3 / exit
+void drawRightStage8(int pause_length)
+{
+   // mid-corner/exit: 
+   drawRoad(1);
+   drawTires(1);
+   drawTrackLimits(1,8);
+   drawGrass(1, 8);
    
    drawCar();
    drawDriver(1,0);
@@ -570,59 +716,21 @@ void drawTires(int dir)
 // dir = 1: right
 
 // stage = 0: straight
-// stage = -11: left curve
-// stage = 1: first
-// stage = 2: second
-// stage = 3: third
-// stage = 4: fourth
-// stage = 5: fifth
-// stage = 6: mid-corner/exit
+// stage = 1: approaching turn first
+// stage = 2: approaching turn second
+// stage = 3: approaching turn third
+// stage = 4: approaching turn fourth
+// stage = 5: approaching turn fifth
+// stage = 6: mid-corner first
+// stage = 7: mid-corner second
+// stage = 8: mid-corner third/exit
 void drawTrackLimits(int dir, int stage)
 {
   int color_white = matrix.Color888(255,255,255);
   int color_gray = matrix.Color333(2,2,4);
   
-  // left curve
-  if (stage == -11) 
-  {
-      int x_white[65] = { 1,2,16,
-                          2,3,17,18,19,
-                          3,4,19,20,21,
-                          4,5,21,22,23,
-                          4,5,23,24,25,
-                          5,6,25,26,
-                          5,6,26,27,28,
-                          4,5,27,28,29,
-                          4,5,29,30,
-                          4,5,29,30,
-                          3,4,30,31,
-                          3,4,30,31,
-                          2,3,30,31,
-                          1,2,31,
-                          2,2,
-                          0,1};
-                         
-      int y_white[65] = {0,0,0,
-                         1,1,1,1,1,
-                         2,2,2,2,2,
-                         3,3,3,3,3,
-                         4,4,4,4,4,
-                         5,5,5,5,
-                         6,6,6,6,6,
-                         7,7,7,7,7,
-                         8,8,8,8,
-                         9,9,9,9,
-                         10,10,10,10,
-                         11,11,11,11,
-                         12,12,12,12,
-                         13,13,13,
-                         14,14,
-                         15,15};
-       drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
-  }
-
   // 1
-  else if (stage == 1)
+  if (stage == 1)
   {
       int x_white[75] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
                           0,1,2,3,4,5,6,7,8,9,21,22,
@@ -885,50 +993,43 @@ void drawTrackLimits(int dir, int stage)
       }
   }
 
-  // mid-corner/exit
+  // mid-corner 1
   else if (stage == 6) 
   {
-      int x_white[59] = { 20,21,
-                          21,22,
-                          0,22,23,
-                          0, 1,23,24,
-                             1, 2,24,25,
-                                2, 3,25,26,
-                                   3, 4,26,27,
-                                      4, 5,27,28,
-                                         5, 6,28,29,
-                                         5, 6,28,29,
-                                         5, 6,28,29,
-                                      4, 5,27,28,
-                                      4, 5,26,27,
-                                   3, 4,26,27,
-                                   3, 4,26,27,
-                                2, 3,25,26};
+      int x_white[39] = {13,14,15,16,17,18,
+                        19,20,21,22,
+                        22,23,24,
+                        24,25,26,
+                        0,1,26,27,28,29,
+                        1,2,29,30,31,
+                        2,3,31,
+                        3,
+                        3,
+                        3,
+                        2,
+                        2,
+                        1,
+                        1,
+                        0,
+                        0};
                          
-      int y_white[59] = {0, 0,
-                         1, 1,
-                         2, 2, 2,
-                         3, 3, 3, 3,
-                         4, 4, 4, 4,
-                         5, 5, 5, 5,
-                         6, 6, 6, 6,
-                         7, 7, 7, 7,
-                         8, 8, 8, 8,
-                         9, 9, 9, 9,
-                         10,10,10,10,
-                         11,11,11,11,
-                         12,12,12,12,
-                         13,13,13,13,
-                         14,14,14,14,
-                         15,15,15,15};
+      int y_white[39] = {0,0,0,0,0,0,
+                        1,1,1,1,
+                        2,2,2,
+                        3,3,3,
+                        4,4,4,4,4,4,
+                        5,5,5,5,5,
+                        6,6,6,
+                        7,8,9,10,11,12,13,14,15};
+                        
       // left
       if (dir == -1)
       {
          drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
          
          // adding the new space to the road:
-         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10,  1,2,3,4,5,6,7,8,9, 2,3,4,5,6,7,8, 3,4,5,6,7, 4,5,6, 5};
-         int y_gray[48] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1,  2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,4,4,4,4, 5,5,5, 6};
+         int x_gray[83] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,23, 2,3,4,5,6,7,24,25, 3,4,5,6,7,25,26,27,28, 4,5,26,27,28,29,30, 4,27,28,29,30,31, 28,29,30,31, 29,30,31, 30,31, 31};
+         int y_gray[83] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 3, 4,4,4,4,4,4, 4, 4, 5,5,5,5,5, 5, 5, 5, 5, 6,6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7,  8, 8, 8, 8,  9, 9, 9, 10,10, 11};
          drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
       }
 
@@ -938,9 +1039,200 @@ void drawTrackLimits(int dir, int stage)
          drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
 
          // adding the new space to the road:
-         int x_gray[48] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10,  1,2,3,4,5,6,7,8,9, 2,3,4,5,6,7,8, 3,4,5,6,7, 4,5,6, 5};
-         int y_gray[48] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1,  2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,4,4,4,4, 5,5,5, 6};
+         int x_gray[83] = {0,1,2,3,4,5,6,7,8,9,10,11, 0,1,2,3,4,5,6,7,8,9,10, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,23, 2,3,4,5,6,7,24,25, 3,4,5,6,7,25,26,27,28, 4,5,26,27,28,29,30, 4,27,28,29,30,31, 28,29,30,31, 29,30,31, 30,31, 31};
+         int y_gray[83] = {0,0,0,0,0,0,0,0,0,0, 0, 0, 1,1,1,1,1,1,1,1,1,1, 1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3, 3, 4,4,4,4,4,4, 4, 4, 5,5,5,5,5, 5, 5, 5, 5, 6,6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7,  8, 8, 8, 8,  9, 9, 9, 10,10, 11};
          drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+  }
+  
+  // mid-corner 2
+  else if (stage == 7) 
+  {
+      int x_white[35] = {2,18,19,20,
+                        2,20,21,22,
+                        3,22,23,24,
+                        3,24,25,26,
+                        3,26,27,28,
+                        2,28,29,30,
+                        2,30,
+                        2,30,31,
+                        1,31,
+                        1,31,
+                        0,
+                        0
+                        };
+                         
+      int y_white[35] = {0,0,0,0,
+                        1,1,1,1,
+                        2,2,2,2,
+                        3,3,3,3,
+                        4,4,4,4,
+                        5,5,5,5,
+                        6,6,
+                        7,7,7,
+                        8,8,
+                        9,9,
+                        10,
+                        11};
+                        
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[67] = {  3,4,5,6,7,8,9,10,11,
+                             3,4,5,6,7,8,9,10,
+                               4,5,6,7,8,9,
+                               4,5,6,7,8,             23,
+                               4,5,6,7,                  24,25,
+                             3,4,5,6,7,                     25,26,27,
+                             3,4,5,                            26,27,28,29,
+                             3,4,                                 27,28,29,
+                           2,3,                                      28,29,30,
+                           2,                                           29,30,
+                           1,                                              30,31,
+                                                                              31};
+         int y_gray[67] = {0,0,0,0,0,0,0,0,0,
+                           1,1,1,1,1,1,1,1,
+                           2,2,2,2,2,2,
+                           3,3,3,3,3,3,
+                           4,4,4,4,4,4,
+                           5,5,5,5,5,5,5,5,
+                           6,6,6,6,6,6,6,
+                           7,7,7,7,7,
+                           8,8,8,8,8,
+                           9,9,9,
+                           10,10,10,
+                           11};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[67] = {  3,4,5,6,7,8,9,10,11,
+                             3,4,5,6,7,8,9,10,
+                               4,5,6,7,8,9,
+                               4,5,6,7,8,             23,
+                               4,5,6,7,                  24,25,
+                             3,4,5,6,7,                     25,26,27,
+                             3,4,5,                            26,27,28,29,
+                             3,4,                                 27,28,29,
+                           2,3,                                      28,29,30,
+                           2,                                           29,30,
+                           1,                                              30,31,
+                                                                              31};
+         int y_gray[67] = {0,0,0,0,0,0,0,0,0,
+                           1,1,1,1,1,1,1,1,
+                           2,2,2,2,2,2,
+                           3,3,3,3,3,3,
+                           4,4,4,4,4,4,
+                           5,5,5,5,5,5,5,5,
+                           6,6,6,6,6,6,6,
+                           7,7,7,7,7,
+                           8,8,8,8,8,
+                           9,9,9,
+                           10,10,10,
+                           11};
+         drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+  }
+
+  // mid-corner 3 / exit
+  else if (stage == 8) 
+  {
+      int x_white[26] = {5, 18,19,
+                         4, 19,20,
+                         4, 21,22,
+                         3, 23,24,
+                         3, 25,
+                         2, 26,
+                         2, 27,28,
+                         1, 29,30,
+                         1, 31,
+                         0,
+                         0};
+                         
+      int y_white[26] = {0,0,0,
+                        1,1,1,
+                        2,2,2,
+                        3,3,3,
+                        4,4,
+                        5,5,
+                        6,6,6,
+                        7,7,7,
+                        8,8,
+                        9,
+                        10};
+                        
+      // left
+      if (dir == -1)
+      {
+         drawArray(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+         
+         // adding the new space to the road:
+         int x_gray[57] = {6,7,8,9,10,11,
+                           5,6,7,8,9,10,
+                           5,6,7,8,9,
+                           4,5,6,7,8,
+                           4,5,6,7, 24,
+                           3,4,5,6, 25,
+                           3,4,5, 26,
+                           2,3,4, 27,28,
+                           2,3, 28,29,30,
+                           1,2,3, 29,30,31,
+                           1, 30,31,
+                           0, 31};
+         int y_gray[57] = {0,0,0,0,0,0,
+                           1,1,1,1,1,1,
+                           2,2,2,2,2,
+                           3,3,3,3,3,
+                           4,4,4,4,4,
+                           5,5,5,5,5,
+                           6,6,6,6,
+                           7,7,7,7,7,
+                           8,8,8,8,8,
+                           9,9,9,9,9,9,
+                           10,10,10,
+                           11,11};
+         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
+      }
+
+      // right
+      else if (dir == 1)
+      {
+         drawArrayHFlip(x_white, sizeof(x_white), y_white, sizeof(y_white), color_white ,0);
+
+         // adding the new space to the road:
+         int x_gray[57] = {6,7,8,9,10,11,
+                           5,6,7,8,9,10,
+                           5,6,7,8,9,
+                           4,5,6,7,8,
+                           4,5,6,7, 24,
+                           3,4,5,6, 25,
+                           3,4,5, 26,
+                           2,3,4, 27,28,
+                           2,3, 28,29,30,
+                           1,2,3, 29,30,31,
+                           1, 30,31,
+                           0, 31};
+         int y_gray[57] = {0,0,0,0,0,0,
+                           1,1,1,1,1,1,
+                           2,2,2,2,2,
+                           3,3,3,3,3,
+                           4,4,4,4,4,
+                           5,5,5,5,5,
+                           6,6,6,6,
+                           7,7,7,7,7,
+                           8,8,8,8,8,
+                           9,9,9,9,9,9,
+                           10,10,10,
+                           11,11};
+            drawArrayHFlip(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
       }
   }
   
@@ -978,55 +1270,19 @@ void drawTrackLimits(int dir, int stage)
 }
 
 // draw the green grass
-// left curve: dir = -11
-// left (mid-corner/exit): dir = -1
-// straight: dir = 0
+// left: dir = -1
 // right: dir = 1
-void drawGrass(int dir)
+//
+// mid-corner 1: stage = 6
+// mid-corner 2: stage = 7
+// mid-corner 3 / exit: stage = 8
+// straight: stage = 0
+void drawGrass(int dir, int stage)
 {
     int color_green = matrix.Color888(34,139,34);
-   
-   // left curve
-    if (dir == -11) 
-    {
-        int x_green[137] = {0, 1,                16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
-                            0, 1, 2,                      19,20,21,22,23,24,25,26,27,28,29,30,31,
-                            0, 1, 2, 3,                         21,22,23,24,25,26,27,28,29,30,31,
-                            0, 1, 2, 3, 4,                            23,24,25,26,27,28,29,30,31,
-                            0, 1, 2, 3, 4,                                  25,26,27,28,29,30,31,                        
-                            0, 1, 2, 3, 4, 5,                                  26,27,28,29,30,31,
-                            0, 1, 2, 3, 4, 5,                                        28,29,30,31,
-                            0, 1, 2, 3, 4,                                              29,30,31,
-                            0, 1, 2, 3, 4,                                                 30,31,
-                            0, 1, 2, 3, 4,                                                 30,31,
-                            0, 1, 2, 3,                                                       31,
-                            0, 1, 2, 3,                                                       31,
-                            0, 1, 2,
-                            0, 1,
-                            0, 1,
-                            0};
-        
-        int y_green[137] = { 0, 0,                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                             1, 1, 1,                       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                             2, 2, 2, 2,                          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                             3, 3, 3, 3, 3,                             3, 3, 3, 3, 3, 3, 3, 3, 3,
-                             4, 4, 4, 4, 4,                                   4, 4, 4, 4, 4, 4, 4,
-                             5, 5, 5, 5, 5, 5,                                   5, 5, 5, 5, 5, 5,
-                             6, 6, 6, 6, 6, 6,                                         6, 6, 6, 6,
-                             7, 7, 7, 7, 7,                                               7, 7, 7,
-                             8, 8, 8, 8, 8,                                                 8, 8,
-                             9, 9, 9, 9, 9,                                                 9, 9,
-                            10,10,10,10,                                                      10,
-                            11,11,11,11,                                                      11,
-                            12,12,12,                                                         
-                            13,13,
-                            14,14,
-                            15};
-        drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
-    }
 
-    // straight
-    else if(dir == 0) 
+    // straight, all approaching turns, and mid-corner 3 / exit
+    if(stage == 0) 
     {
         int x_green[110] = {0,1,2,3,4,5,6,7,8,9, 22,23,24,25,26,27,28,29,30,31,
                             0,1,2,3,4,5,6,7,8,      23,24,25,26,27,28,29,30,31,
@@ -1051,51 +1307,50 @@ void drawGrass(int dir)
         drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
     }
     
-    // left or right (mid-corner/exit)
-    else if(dir == -6 || dir == 6) 
+    // mid-corner 1
+    else if(stage == 6) 
     {
-        int x_green[119] = {                     22,23,24,25,26,27,28,29,30,31,
-                                                    23,24,25,26,27,28,29,30,31,
-                                                       24,25,26,27,28,29,30,31,
-                                                          25,26,27,28,29,30,31,
-                            0,                               26,27,28,29,30,31,
-                            0,1,                                27,28,29,30,31,
-                            0,1,2,                                 28,29,30,31,
-                            0,1,2,3,                                  29,30,31,
-                            0,1,2,3,4,                                   30,31,
-                            0,1,2,3,4,                                   30,31,
-                            0,1,2,3,4,                                   30,31,
-                            0,1,2,3,                                  29,30,31,
-                            0,1,2,3,                               28,29,30,31,
-                            0,1,2,                                 28,29,30,31,
-                            0,1,2,                                 28,29,30,31,
-                            0,1,                                27,28,29,30,31};
+        // left                           
+        if (dir == -1)
+        {
+            drawArray(x_green_mc1, sizeof(x_green_mc1), y_green_mc1, sizeof(y_green_mc1), color_green ,0);
+        }
+        // right
+        else if (dir == 1)
+        {
+            drawArrayHFlip(x_green_mc1, sizeof(x_green_mc1), y_green_mc1, sizeof(y_green_mc1), color_green ,0);
+        }
+    }
 
-        int y_green[119] = {0,0,0,0,0,0,0,0,0,0,
-                           1,1,1,1,1,1,1,1,1,
-                           2,2,2,2,2,2,2,2,
-                           3,3,3,3,3,3,3,
-                           4,4,4,4,4,4,4,
-                           5,5,5,5,5,5,5,
-                           6,6,6,6,6,6,6,
-                           7,7,7,7,7,7,7,
-                           8,8,8,8,8,8,8,
-                           9,9,9,9,9,9,9,
-                           10,10,10,10,10,10,10,
-                           11,11,11,11,11,11,11,
-                           12,12,12,12,12,12,12,12,
-                           13,13,13,13,13,13,13,
-                           14,14,14,14,14,14,14,
-                           15,15,15,15,15,15,15};
-         if (dir == -6)
-         {
-            drawArray(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
-         }
-         else if (dir == 6)
-         {
-            drawArrayHFlip(x_green, sizeof(x_green), y_green, sizeof(y_green), color_green ,0);
-         }
-        
+    // mid-corner 2
+    else if(stage == 7) 
+    {     
+      // left                           
+        if (dir == -1)
+        {
+
+            drawArray(x_green_mc2, sizeof(x_green_mc2), y_green_mc2, sizeof(y_green_mc2), color_green ,0);
+        }
+        // right
+        else if (dir == 1)
+        {
+            drawArrayHFlip(x_green_mc2, sizeof(x_green_mc2), y_green_mc2, sizeof(y_green_mc2), color_green ,0);
+        }
+    }
+   
+   // mid-corner 3 / exit
+    else if(stage == 8) 
+    {     
+      // left                           
+        if (dir == -1)
+        {
+            drawArray(x_green_mc3, sizeof(x_green_mc3), y_green_mc3, sizeof(y_green_mc3), color_green ,0);
+        }
+        // right
+        else if (dir == 1)
+        {
+            drawArrayHFlip(x_green_mc3, sizeof(x_green_mc3), y_green_mc3, sizeof(y_green_mc3), color_green ,0);
+        }
     }
 }
 
@@ -1195,118 +1450,6 @@ void drawDriver(int turn, int accel)
   }
 }
 
-// EXPERIMENTAL
-// draw the brown gravel
-void drawGravel(void)
-{
-    int x_brown[56] = {0,1,2,3,4,5,6,                  25,26,27,28,29,30,31,
-                        0,1,2,3,4,5,                       26,27,28,29,30,31,
-                        0,1,2,3,4,                            27,28,29,30,31,
-                        0,1,2,3,                                 28,29,30,31,
-                        0,1,2,                                      29,30,31,
-                        0,1,                                           30,31,
-                        0,                                                31};
-                       
-    int y_brown[56] = {0,0,0,0,0,0,0,                0,0,0,0,0,0,0,
-                        1,1,1,1,1,1,                    1,1,1,1,1,1,
-                        2,2,2,2,2,                        2,2,2,2,2,
-                        3,3,3,3,                            3,3,3,3,
-                        4,4,4,                                4,4,4,
-                        5,5,                                    5,5,
-                        6,                                        6,};
-
-    int color_brown = matrix.Color333(2,1,0);
-    drawArray(x_brown, sizeof(x_brown), y_brown, sizeof(y_brown), color_brown, 0);
-}
-
-// EXPERIMENTAL:
-// draw the gray-blue road surface for a left curve 
-// left: -1
-// straight: 0
-// right: 1
-void drawLeftCurve(int road, int tire)
-{
-    int color_gray = matrix.Color333(2,2,4);
-    
-    if ((tire == -1) && (road == -1)) // left tire and left road 
-    {
-        int x_gray[237] ={3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
-                             4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,
-                                5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,
-                                   6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,
-                                   6, 7, 8, 9,10,11,12,13,14,      17,18,19,20,21,22,
-                                      7, 8, 9,                                    22,23,24,
-                                      7, 8,   10,11,12,13,14,      17,18,19,20,   22,23,24,25,
-                                   6, 7,         11,12,13,            18,19,         23,24,25,26,
-                                   6, 7,                                                24,25,26,27,28,29,
-                                   6, 7, 8,         12,13,            18,19,20,         24,25,26,27,28,
-                                5, 6, 7, 8, 9,   11,12,                  19,20,21,   23,24,25,26,27,28,29,
-                                5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,
-                             4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,
-                          3, 4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,30,
-                          3, 4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,30,31,
-                       2, 3, 4, 5, 6, 7, 8, 9,10,                              21,22,23,24,25,26,27,28,29,30,31};
-    
-                  
-        int y_gray[237] ={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                   3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                   4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4,
-                                      5, 5, 5,                                    5, 5, 5,
-                                      6, 6,    6, 6, 6, 6, 6,       6, 6, 6, 6,   6, 6, 6, 6,
-                                   7, 7,          7, 7, 7,             7, 7,         7, 7, 7, 7,
-                                   8, 8,                                                 8, 8, 8, 8, 8, 8,
-                                   9, 9, 9,          9, 9,             9, 9, 9,          9, 9, 9, 9, 9,
-                               10,10,10,10,10,   10,10,                  10,10,10,   10,10,10,10,10,10,10,
-                               11,11,11,11,11,11,11,                        11,11,11,11,11,11,11,11,11,11,
-                             12,12,12,12,12,12,12,12,                        12,12,12,12,12,12,12,12,12,12,
-                          13,13,13,13,13,13,13,13,13,                        13,13,13,13,13,13,13,13,13,13,13,
-                          14,14,14,14,14,14,14,14,14,                        14,14,14,14,14,14,14,14,14,14,14,14,
-                       15,15,15,15,15,15,15,15,15,                              15,15,15,15,15,15,15,15,15,15,15};
-         drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
-    }
-    
-    else if ((tire == 0) && (road == -1)) // tire straight and road left 
-    {
-        int x_gray[237] ={3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
-                           4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,
-                              5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,
-                                 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,
-                                 6, 7, 8, 9,10,11,12,13,14,      17,18,19,20,21,22,
-                                    7, 8, 9,                                    22,23,24,
-                                    7, 8, 9,10,11,12,13,14,      17,18,19,20,21,22,23,24,25,
-                                 6, 7,         11,12,13,            18,19,20,          24,25,26,
-                                 6, 7,                                                24,25,26,27,28,29,
-                                 6, 7,            12,13,            18,19,            24,25,26,27,28,
-                              5, 6, 7,         11,12,                  19,20,         24,25,26,27,28,29,
-                              5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,
-                           4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,
-                        3, 4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,30,
-                        3, 4, 5, 6, 7, 8, 9,10,11,                        20,21,22,23,24,25,26,27,28,29,30,31,
-                     2, 3, 4, 5, 6, 7, 8, 9,10,                              21,22,23,24,25,26,27,28,29,30,31};
-  
-                
-      int y_gray[237] ={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                              2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4,
-                                    5, 5, 5,                                    5, 5, 5,
-                                    6, 6, 6, 6, 6, 6, 6, 6,       6, 6, 6, 6, 6, 6, 6, 6, 6,
-                                 7, 7,          7, 7, 7,             7, 7, 7,         7,7,7,
-                                 8, 8,                                                 8, 8, 8, 8, 8, 8,
-                                 9, 9,             9, 9,             9, 9,             9, 9, 9, 9, 9,
-                             10,10,10,         10,10,                  10,10,         10,10,10,10,10,10,
-                             11,11,11,11,11,11,11,                        11,11,11,11,11,11,11,11,11,11,
-                           12,12,12,12,12,12,12,12,                        12,12,12,12,12,12,12,12,12,12,
-                        13,13,13,13,13,13,13,13,13,                        13,13,13,13,13,13,13,13,13,13,13,
-                        14,14,14,14,14,14,14,14,14,                        14,14,14,14,14,14,14,14,14,14,14,14,
-                     15,15,15,15,15,15,15,15,15,                              15,15,15,15,15,15,15,15,15,15,15};
-       
-       drawArray(x_gray, sizeof(x_gray), y_gray, sizeof(y_gray), color_gray ,0);
-    }
-}
 
 
 
@@ -1332,7 +1475,7 @@ void matrixUpdate(void)
     matrix.swapBuffers(false);
 }
 
-void draw_logo(void)
+/*void draw_logo(void)
 {
    int x_dig[18] = {0,1,2,2,2,2,3,4,5,5,5,5,6,7,8,8,8,8};
    int y_dig[18] = {8,8,8,7,6,5,5,5,5,6,7,8,8,8,8,7,6,5};
@@ -1354,7 +1497,7 @@ void draw_logo(void)
    
    delay(3000);
    matrixClearScreen();
-}
+}*/
 
 // draw a series of points with a given color
 int drawArray(int xarray[], int size_x, int yarray[], int size_y, int color, int pause)
