@@ -13,7 +13,12 @@ Contact me at: https://www.linkedin.com/in/timothy-cross/
 
 
 Projects here: 
+
 christmas_lights: wintery scene with tree, dynamic fire, animated reindeer and lively falling snow
+
 shifting_lights_logo: successive animation of tx logo then F1 shifting lights
+
 monza2: onboard race car circuit driving animation including speed markers and realistic-looking corners
+
+FallFolitage: dynamic fall treescape with pumpkin and campfire. Over time the leaves change color and fall to the ground.
 
