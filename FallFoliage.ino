@@ -9,49 +9,53 @@
 #define B   A1
 #define C   A2
 
-int timeScaler = 200000; // change this to stretch out or shorten the sequence
+int timeScaler = 4000; // change this to stretch out or shorten the sequence
 //With this at 200,000 the shortest possible time is 3:20, and the longest 116 minutes
 // figure out timeframe desired to do this - a couple hours? A day? A week?
 
 // create 30 leaf triads here:
-Leaves leaf1(timeScaler*random(1,4), 5,5, 22,2, 0,7);
-Leaves leaf2(timeScaler*random(2,5), 0,3, 23,2, 0,8);
-Leaves leaf3(timeScaler*random(3,6), 2,4, 18,3, 19,6);
-Leaves leaf4(timeScaler*random(4,7), 1,6, 22,7, 20,8);
-Leaves leaf5(timeScaler*random(5,8), 4,7, 2,3, 20,1);
-Leaves leaf6(timeScaler*random(6,9), 20,6, 4,2, 4,8);
-Leaves leaf7(timeScaler*random(7,10), 3,5, 20,4, 1,7);
-Leaves leaf8(timeScaler*random(8,11), 3,6, 2,2, 23,6);
-Leaves leaf9(timeScaler*random(9,12), 5,3, 19,8, 22,3);
-Leaves leaf10(timeScaler*random(10,13), 19,2, 2,7, 3,3);
-Leaves leaf11(timeScaler*random(11,14), 4,3, 20,2, 18,6);
-Leaves leaf12(timeScaler*random(12,15), 6,6, 21,3, 23,8);
-Leaves leaf13(timeScaler*random(13,16), 0,4, 21,1, 0,5);
-Leaves leaf14(timeScaler*random(14,17), 20,0, 6,5, 23,4);
-Leaves leaf15(timeScaler*random(15,18), 1,4, 5,4, 21, 6);
-Leaves leaf16(timeScaler*random(16,19), 22,5, 0,6, 5,6);
-Leaves leaf17(timeScaler*random(17,20), 2,8, 18,8, 1,3);
-Leaves leaf18(timeScaler*random(18,21), 3,2, 22,1, 22,8);
-Leaves leaf19(timeScaler*random(19,22), 22,6, 19,1, 21,8);
-Leaves leaf20(timeScaler*random(20,23), 1,8, 19,4, 21,4);
-Leaves leaf21(timeScaler*random(21,24), 1,2, 2,6, 21,2);
-Leaves leaf22(timeScaler*random(22,25), 4,4, 19,3, 21,6);
-Leaves leaf23(timeScaler*random(23,26), 4,6, 3,7, 20,3);
-Leaves leaf24(timeScaler*random(24,27), 5,7, 21,0, 4,9);
-Leaves leaf25(timeScaler*random(25,28), 2,1, 3,4, 22,4);
-Leaves leaf26(timeScaler*random(26,29), 6,4, 1,9, 23,8);
-Leaves leaf27(timeScaler*random(27,30), 21,5, 3,8, 2,5);
-Leaves leaf28(timeScaler*random(28,31), 1,5, 3,1, 19,7);
-Leaves leaf29(timeScaler*random(29,32), 4,5, 21,7, 20,5);
-Leaves leaf30(timeScaler*random(30,33), 2,9, 19,5, 20,7);
-Leaves leaf31(timeScaler*random(31,35), 19,7, 5,8, 3,9);
+Leaves leaf1(timeScaler, 5,5, 22,2, 0,7);
+Leaves leaf2(timeScaler, 0,3, 23,2, 0,8);
+Leaves leaf3(timeScaler, 2,4, 18,3, 19,6);
+Leaves leaf4(timeScaler, 1,6, 22,7, 20,8);
+Leaves leaf5(timeScaler, 4,7, 2,3, 20,1);
+Leaves leaf6(timeScaler, 20,6, 4,2, 4,8);
+Leaves leaf7(timeScaler, 3,5, 20,4, 1,7);
+Leaves leaf8(timeScaler, 3,6, 2,2, 23,6);
+Leaves leaf9(timeScaler, 5,3, 19,8, 22,3);
+Leaves leaf10(timeScaler, 19,2, 2,7, 3,3);
+Leaves leaf11(timeScaler, 4,3, 20,2, 18,6);
+Leaves leaf12(timeScaler, 6,6, 21,3, 23,8);
+Leaves leaf13(timeScaler, 0,4, 21,1, 0,5);
+Leaves leaf14(timeScaler, 20,0, 6,5, 23,4);
+Leaves leaf15(timeScaler, 1,4, 5,4, 21, 6);
+Leaves leaf16(timeScaler, 22,5, 0,6, 5,6);
+Leaves leaf17(timeScaler, 2,8, 18,8, 1,3);
+Leaves leaf18(timeScaler, 3,2, 22,1, 22,8);
+Leaves leaf19(timeScaler, 22,6, 19,1, 21,8);
+Leaves leaf20(timeScaler, 1,8, 19,4, 21,4);
+Leaves leaf21(timeScaler, 1,2, 2,6, 21,2);
+Leaves leaf22(timeScaler, 4,4, 19,3, 21,6);
+Leaves leaf23(timeScaler, 4,6, 3,7, 20,3);
+Leaves leaf24(timeScaler, 5,7, 21,0, 4,9);
+Leaves leaf25(timeScaler, 2,1, 3,4, 22,4);
+Leaves leaf26(timeScaler, 6,4, 1,9, 23,8);
+Leaves leaf27(timeScaler, 21,5, 3,8, 2,5);
+Leaves leaf28(timeScaler, 1,5, 3,1, 19,7);
+Leaves leaf29(timeScaler, 4,5, 21,7, 20,5);
+Leaves leaf30(timeScaler, 2,9, 19,5, 20,7);
+Leaves leaf31(timeScaler, 19,7, 5,8, 3,9);
 
 Leaves leafList[31] = {leaf1,leaf2,leaf3,leaf4,leaf5,leaf6,leaf7,leaf8,leaf9,leaf10,leaf11,leaf12,leaf13,leaf14,leaf15,leaf16,leaf17,leaf18,leaf19,leaf20,leaf21,leaf22,leaf23,leaf24,leaf25,leaf26,leaf27,leaf28,leaf29,leaf30,leaf31};
+int leafDrawList[62];
 
 RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);
 
 int deer_countdown = 0;
 int fire_shifter = 0;
+int step; // Lumi's step counter
+int leafDrawCount = 0;
+unsigned long lastTime = 0;
 
 // colors:
 
@@ -107,10 +111,9 @@ int leaf_red2 = matrix.Color888(119,7,10);
 int leaf_colors[10] = {leaf_green1, leaf_green2, leaf_green3, leaf_yellow1, leaf_yellow2, leaf_orange1, leaf_orange2, leaf_orange3, leaf_red1, leaf_red2}; 
 
 
-
-
 void setup() 
-{
+ {
+    
     matrixInit();
     Serial.begin(9600);
 
@@ -119,29 +122,65 @@ void setup()
 
 void loop() 
 {
+    //leavesColorTick();
+    selectRandomLeaf();
 
-  // adjust speed here:
-  delay(10);
-  
-  leavesColorTick();
+    // adjust speed here:
+    delay(10);
 
-  // clear the screen
-  matrixClearScreen();
+    // clear the screen
+    matrixClearScreen();
 
-  // draw elements
-  drawGround();
-  drawTrees();
-  drawPumpkin();
-  drawLeaves();
-  
-  // every so often maybe change the position of the flame tip
-  if (millis() % 10 == 0)
+    // draw elements
+    drawGround();
+    drawTrees();
+    drawPumpkin();
+    drawLeaves();
+
+    // every so often maybe change the position of the flame tip
+    if (millis() % 10 == 0)
+        {
+            fire_shifter = random(2);
+        }
+    drawFire(fire_shifter);
+    
+}
+
+void selectRandomLeaf(void)
+{
+    unsigned long leafGap = 3000; // amount of time between leaf triads being processed in ms
+    // 300,000 ms = 5 minutes
+
+    Serial.println(leafDrawCount);
+
+    if ((millis() - lastTime > leafGap)) 
     {
-        fire_shifter = random(2);
+        leafDrawCount += 1;
+        
+        // 40 gives us some overflow in case leaves are picked twice
+        if (leafDrawCount < 40) // this lets us keep counting up the leafDrawCount without processing new leaves - helps get a clean ending
+        {
+            // add a random number to the leaf draw list which corresponds to an index of the leaf list
+            leafDrawList[leafDrawCount-1] = random(0,32);
+        }
+
+        lastTime = millis();
+    }
+    else if (leafDrawCount >= 42)
+    {
+        for (int i = 0 ; i < leafDrawCount ; i++)
+        {
+            leafList[leafDrawList[i]].reset();
+        }
+        leafDrawCount = 0;
     }
 
-  drawFire(fire_shifter);
-
+    // go through all the leaves that have been picked so far and continue their tick function
+    // if the leaf has already landed or is picked again, no problem as the object takes care of this
+    for (int i = 0 ; i < leafDrawCount ; i++)
+    {
+        leafList[leafDrawList[i]].colorTick();
+    }
 }
 
 // draw the orange and brown pumpkin
@@ -226,13 +265,13 @@ void drawFire(int shifter)
 }
 
 // tick along the color timeline for all the leaves in the list
-void leavesColorTick(void)
+/*void leavesColorTick(void)
 {
     for (int i = 0 ; i < 31 ; i++)
     {
         leafList[i].colorTick();
     }
-}
+}*/
 
 // draw the whole leaf list
 void drawLeaves(void)
